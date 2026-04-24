@@ -85,8 +85,8 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
 
   if (initializing) {
     return (
-      <div className="min-h-screen bg-[#102e5d] flex items-center justify-center p-6">
-        <div className="rounded-xl bg-white px-6 py-4 text-sm font-medium text-[#1b3461] shadow-lg">
+      <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-6">
+        <div className="rounded-xl bg-[#243447] px-6 py-4 text-sm font-medium text-white shadow-lg">
           Checking admin session...
         </div>
       </div>
@@ -95,30 +95,30 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
 
   if (!authEmail) {
     return (
-      <div className="min-h-screen bg-[#102e5d] flex items-center justify-center p-6 font-sans">
-        <div className="w-full max-w-md rounded-2xl bg-white p-6 md:p-8 shadow-xl border border-[#d1d5db]">
+      <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-6 font-sans">
+        <div className="w-full max-w-md rounded-2xl bg-[#243447] p-6 md:p-8 shadow-xl border border-white/20">
           <button
             type="button"
             onClick={onBack}
-            className="mb-4 inline-flex items-center gap-2 rounded-md border border-[#1b3461] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3461] hover:bg-[#1b3461] hover:text-white transition-colors"
+            className="mb-4 inline-flex items-center gap-2 rounded-md border border-[#C9A035] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white hover:bg-[#243447] hover:text-white transition-colors"
           >
             Back
           </button>
 
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#CC0000]">Admin Access</p>
-          <h1 className="mt-2 text-2xl font-display font-black uppercase text-[#1b3461]">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C9A035]">Admin Access</p>
+          <h1 className="mt-2 text-2xl font-display font-black uppercase text-white">
             Sign in
           </h1>
 
           {error ? (
-            <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-[#dc2626]">
+            <div className="mt-4 rounded-md border border-[#a85555] bg-[#3f1f1f] px-3 py-2 text-sm text-[#fca5a5]">
               {error}
             </div>
           ) : null}
 
           <form onSubmit={(e) => void handleSignIn(e)} className="mt-5 space-y-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1b3461]">
+              <label className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
                 Email
               </label>
               <input
@@ -126,12 +126,12 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-md border border-[#d1d5db] px-3 py-3 text-sm text-[#1a1a1a] outline-none focus:border-[#1b3461] focus:ring-2 focus:ring-[#1b3461]/10"
+                className="w-full rounded-md border border-white/20 px-3 py-3 text-sm text-white outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20"
                 required
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1b3461]">
+              <label className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
                 Password
               </label>
               <input
@@ -139,14 +139,14 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full rounded-md border border-[#d1d5db] px-3 py-3 text-sm text-[#1a1a1a] outline-none focus:border-[#1b3461] focus:ring-2 focus:ring-[#1b3461]/10"
+                className="w-full rounded-md border border-white/20 px-3 py-3 text-sm text-white outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-md bg-[#1b3461] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-white hover:bg-[#102e5d] transition-colors disabled:opacity-60"
+              className="w-full rounded-md bg-[#243447] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-white hover:bg-[#1C2B3A] transition-colors disabled:opacity-60"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
@@ -161,9 +161,9 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#102e5d]">
+    <div className="min-h-screen bg-[#1C2B3A]">
       <div className="mx-auto max-w-[96rem] px-6 pt-4 md:px-10">
-        <div className="rounded-md border border-white/15 bg-white/10 px-4 py-2 text-xs text-white flex flex-wrap items-center gap-2">
+        <div className="rounded-md border border-white/15 bg-[#243447]/10 px-4 py-2 text-xs text-white flex flex-wrap items-center gap-2">
           <span>
             Signed in as <span className="font-semibold">{authEmail}</span>
           </span>
@@ -171,7 +171,7 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
           <button
             type="button"
             onClick={() => setShowMemberRegistration(true)}
-            className="font-semibold text-[#CC0000] hover:text-[#ff4d4d] transition-colors"
+            className="font-semibold text-[#C9A035] hover:text-[#ff4d4d] transition-colors"
           >
             Register a member
           </button>
@@ -179,7 +179,7 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
           <button
             type="button"
             onClick={() => void handleSignOut()}
-            className="font-semibold text-[#CC0000] hover:text-[#ff4d4d] transition-colors"
+            className="font-semibold text-[#C9A035] hover:text-[#ff4d4d] transition-colors"
           >
             Sign out
           </button>

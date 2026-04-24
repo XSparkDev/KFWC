@@ -149,32 +149,32 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#102e5d] flex items-start justify-center p-6 md:p-10 font-sans">
-      <div className="w-full max-w-[96rem] bg-white rounded-[1.5rem] shadow-2xl border border-[#173a70] p-6 md:p-10">
+    <div className="min-h-screen bg-[#1C2B3A] flex items-start justify-center p-6 md:p-10 font-sans">
+      <div className="w-full max-w-[96rem] bg-[#243447] rounded-[1.5rem] shadow-2xl border border-[#C9A035] p-6 md:p-10">
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
             <button
               type="button"
               onClick={onBack}
-              className="mb-3 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#102e5d] border border-[#102e5d] px-3 py-2 rounded-md hover:bg-[#102e5d] hover:text-white transition-colors"
+              className="mb-3 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-white border border-[#C9A035] px-3 py-2 rounded-md hover:bg-[#1C2B3A] hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#CC0000] mb-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#C9A035] mb-2">
               Internal Tool
             </p>
-            <h1 className="text-3xl md:text-4xl font-display font-black uppercase text-[#102e5d]">
+            <h1 className="text-3xl md:text-4xl font-display font-black uppercase text-white">
               KZN Indaba Registrants
             </h1>
-            <p className="text-xs text-[#6b7280] mt-2 max-w-xl">
+            <p className="text-xs text-[#B0BEC5] mt-2 max-w-xl">
               View and export KZN Liquor Indaba registrations from the KZN Supabase project.
             </p>
           </div>
           <button
             type="button"
             onClick={downloadCsv}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#CC0000] px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white hover:bg-[#990000] transition-colors"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#C9A035] px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white hover:bg-[#A07E25] transition-colors"
           >
             <Download className="w-4 h-4" />
             Export CSV
@@ -183,30 +183,30 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
 
         <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="relative w-full md:max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#173a70]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A035]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, email, or organisation"
-              className="w-full pl-9 pr-3 py-2 rounded-md border border-[#102e5d] bg-white text-sm font-medium text-[#102e5d] outline-none focus:border-[#173a70] transition-colors"
+              className="w-full pl-9 pr-3 py-2 rounded-md border border-[#C9A035] bg-[#243447] text-sm font-medium text-white outline-none focus:border-[#C9A035] transition-colors"
             />
           </div>
-          <p className="text-[11px] text-[#6b7280] font-medium">
-            Showing <span className="font-bold text-[#102e5d]">{filteredRegistrants.length}</span>{' '}
-            of <span className="font-bold text-[#102e5d]">{registrants.length}</span> registrants
+          <p className="text-[11px] text-[#B0BEC5] font-medium">
+            Showing <span className="font-bold text-white">{filteredRegistrants.length}</span>{' '}
+            of <span className="font-bold text-white">{registrants.length}</span> registrants
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-[#dc2626] font-medium">
+          <div className="mb-4 rounded-xl border border-[#a85555] bg-[#3f1f1f] px-4 py-3 text-xs text-[#fca5a5] font-medium">
             {error}
           </div>
         )}
 
-        <div className="overflow-x-auto rounded-2xl border border-[#173a70]/20">
+        <div className="overflow-x-auto rounded-2xl border border-[#C9A035]/20">
           <table className="min-w-full text-left text-xs">
-            <thead className="bg-[#102e5d] border-b border-[#173a70]">
+            <thead className="bg-[#1C2B3A] border-b border-[#C9A035]">
               <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
                 <th className="px-4 py-3 min-w-[170px]">Reference</th>
                 <th className="px-4 py-3 min-w-[180px]">Name</th>
@@ -227,13 +227,13 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#6b7280]">
+                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
                     Loading registrants...
                   </td>
                 </tr>
               ) : filteredRegistrants.length === 0 ? (
                 <tr>
-                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#6b7280]">
+                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
                     No registrants found.
                   </td>
                 </tr>
@@ -241,30 +241,30 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
                 filteredRegistrants.map((r) => (
                   <tr
                     key={r.id}
-                    className="border-b border-zinc-100 odd:bg-white even:bg-slate-50 hover:bg-[#F5F0E8] transition-colors"
+                    className="border-b border-white/10 odd:bg-[#243447] even:bg-[#1C2B3A] hover:bg-[#1C2B3A] transition-colors"
                   >
-                    <td className="px-4 py-3 text-[11px] font-semibold text-[#102e5d] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[11px] font-semibold text-white whitespace-nowrap">
                       {r.reference || '—'}
                     </td>
-                    <td className="px-4 py-3 text-sm font-semibold text-[#102e5d] break-words">
+                    <td className="px-4 py-3 text-sm font-semibold text-white break-words">
                       {`${r.first_name || ''} ${r.last_name || ''}`.trim() || '-'}
                     </td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d] break-all">{r.email || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d] break-all">{r.organisation || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d] whitespace-nowrap">{r.phone_number || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d] break-words">{r.delegate_category || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d] break-words">{r.district || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d]">{yesNo(r.day_one)}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d]">{yesNo(r.day_two)}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d]">{r.gala_dinner || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d]">{r.shuttle || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#102e5d]">{r.accommodation || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-[#6b7280]">{formatRegisteredDate(r.created_at)}</td>
+                    <td className="px-4 py-3 text-[11px] text-white break-all">{r.email || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white break-all">{r.organisation || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white whitespace-nowrap">{r.phone_number || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white break-words">{r.delegate_category || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white break-words">{r.district || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white">{yesNo(r.day_one)}</td>
+                    <td className="px-4 py-3 text-[11px] text-white">{yesNo(r.day_two)}</td>
+                    <td className="px-4 py-3 text-[11px] text-white">{r.gala_dinner || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white">{r.shuttle || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white">{r.accommodation || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-[#B0BEC5]">{formatRegisteredDate(r.created_at)}</td>
                     <td className="px-4 py-3 text-center">
                       {r.registration_complete ? (
-                        <CheckCircle2 className="w-5 h-5 text-[#16a34a] mx-auto" />
+                        <CheckCircle2 className="w-5 h-5 text-[#C9A035] mx-auto" />
                       ) : (
-                        <XCircle className="w-5 h-5 text-[#dc2626] mx-auto" />
+                        <XCircle className="w-5 h-5 text-[#fca5a5] mx-auto" />
                       )}
                     </td>
                   </tr>

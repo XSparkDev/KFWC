@@ -6,6 +6,7 @@ import {
   TrendingUp,
   Heart,
   Users,
+  Clock3,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -13,116 +14,148 @@ type KznLandingPageProps = {
   onRegisterClick: () => void;
 };
 
-const HERO_IMAGES = ['/herro1.png', '/herro2.png', '/herro3.png'];
-const TARGET_DATE = new Date('2026-05-08T00:00:00+02:00');
+const TARGET_DATE = new Date('2026-05-09T08:00:00+02:00');
 
 const LEADERS = [
   {
-    image: '/musa_zondi.png',
-    name: 'Rev. Musa Zondi',
-    role: 'MEC: Economic Development, Tourism & Environmental Affairs',
+    image: '',
+    name: 'Dr. NJ Makhubu',
+    role: 'Corporate Business Executive, Incoming SARS Commissioner',
     quote:
-      "KZNERA will regulate and empower our province's gambling and liquor industries...",
-    border: 'border-[#1b3461]',
+      'Compliance from the ground up is the foundation of every resilient business...',
+    border: 'border-[#C9A035]',
   },
   {
-    image: '/mbali_myeni.png',
-    name: 'Ms Mbali Myeni',
-    role: 'Board Chairperson, KZNERA',
+    image: '',
+    name: 'Eustace Mashimbye',
+    role: 'CEO: Proudly South African, Market Access Specialist',
     quote:
-      'Our industry contributes enormously to the provincial economy...',
-    border: 'border-[#CC0000]',
+      'Access to South African markets begins with understanding who you are as a business...',
+    border: 'border-[#C9A035]',
   },
   {
-    image: '/portia_baloyi.png',
-    name: 'Ms Portia Baloyi',
-    role: 'Interim Chief Executive Officer, KZNERA',
+    image: '',
+    name: 'Dr. Mashudu Bidzha',
+    role: 'Acting Chief Director: Public Finance, National Treasury',
     quote:
-      'The KZN Liquor Regulatory Indaba marks a significant milestone...',
-    border: 'border-[#1b3461]',
+      'Government and small business must work together to unlock inclusive economic growth...',
+    border: 'border-[#C9A035]',
   },
 ];
 
 const AGENDA_CARDS = [
   {
     icon: FileText,
-    title: 'Licensing & Applications',
+    title: 'Funding & Market Access',
     points: [
-      'New licence applications & transfers',
-      'Renewals (submit 6 months before expiry)',
-      'Special event liquor permits',
-      'Micro-manufacturer registrations',
+      'How to access funding as a SMME',
+      'Access to South African markets',
+      'Advantages of complying from grassroots',
+      'Micro-enterprise growth pathways',
     ],
     highlight: false,
   },
   {
     icon: Scale,
-    title: 'Legislative Reform',
+    title: 'Compliance & Governance',
     points: [
-      'Draft KZN Liquor Licensing Amendment Bill, 2024',
-      'Stakeholder comment & public participation',
-      'Liquor Fee Model review & survey',
-      'New Liquor Licensing Tribunal framework',
+      'Resilience from a risk compliance standpoint',
+      'Advantages of complying from grassroots',
+      'B-BBEE and regulatory requirements',
+      'Legal frameworks for small business',
     ],
     highlight: true,
   },
   {
     icon: ShieldCheck,
-    title: 'Compliance & Enforcement',
+    title: 'Security & Operational Risk',
     points: [
-      'Premises conditions monitoring',
-      'Illicit & counterfeit liquor crackdowns',
-      'Under-age & after-hours trading enforcement',
-      'Multidisciplinary SAPS operations',
+      'Trading under threat: Security, Theft and Fraud',
+      'Beyond Load Shedding: The Real Cost of Energy',
+      'Business continuity planning',
+      'Risk management frameworks',
     ],
     highlight: false,
   },
   {
     icon: TrendingUp,
-    title: 'Transformation & SMMEs',
+    title: 'Digital Innovation',
     points: [
-      'Transformation Fund — Tier 1 funding open',
-      'Township & rural liquor trader support',
-      'Emerging micro-manufacturer development',
-      'B-BBEE compliance in the liquor sector',
+      'Digital Innovation for your business',
+      'Township economy and digital platforms',
+      'Leveraging technology for growth',
+      'E-commerce and online market access',
     ],
     highlight: false,
   },
   {
     icon: Heart,
-    title: 'Harm Reduction & Public Safety',
+    title: 'People & Capability',
     points: [
-      'Responsible trading awareness campaigns',
-      'Youth & gender-based violence prevention',
-      'Festive season roadblocks & beach activations',
-      'Drinking & driving prevention partnerships',
+      'Skills, hiring and capability failures',
+      'Leadership and team development',
+      'How to compete when customers spend less',
+      'Building a high-performance culture',
     ],
     highlight: false,
   },
   {
     icon: Users,
-    title: 'Stakeholder Engagement',
+    title: 'Financial Resilience',
     points: [
-          'Liquor Indaba 2026 — Sibaya Casino, eThekwini',
-      'Industry deal-making & regulatory dialogue',
-      'Traditional leadership & community forums',
-      'Inter-governmental compliance partnerships',
+      'Addressing the crisis of cashflow',
+      'Cost management strategies',
+      'Revenue diversification',
+      'SMME funding and investment readiness',
     ],
     highlight: false,
   },
 ];
 
+const SPEAKERS = [
+  {
+    name: 'Dr. NJ Makhubu',
+    title: 'Corporate Business Executive | Incoming SARS Commissioner',
+  },
+  {
+    name: 'Dr. Maanda Tshifularo',
+    title:
+      'Lecturer, GIBS | Business Turnaround Strategist | Published Author & Leadership Coach',
+  },
+  {
+    name: 'Dr. Mashudu Bidzha',
+    title: 'Acting Chief Director: Public Finance | National Treasury',
+  },
+  {
+    name: 'Eustace Mashimbye',
+    title: 'CEO: Proudly South African | Market Access Specialist',
+  },
+  {
+    name: 'Julia Ramitshana',
+    title: 'Chairperson & CEO | International Partnerships & Industry Collaboration',
+  },
+  {
+    name: 'Rhulani Nyiko Maluleke',
+    title: 'Senior Manager, Nedbank Digital Innovation | Township Economy Ambassador',
+  },
+  {
+    name: 'Xolani Ngazimbi',
+    title: 'Executive Director | Transformation & Diversity Strategist',
+  },
+  {
+    name: 'Luncedo Mtwentwe',
+    title: 'Managing Director, SMME Funding Advisor | Sunday Times Business Columnist',
+  },
+  {
+    name: 'Stanley Bezuidenhout',
+    title: 'Brand Development | Compliance & Growth Specialist',
+  },
+];
+
 const PARTNERS = [
-  '/images/partners/kznedtea.png',
-  '/images/partners/saps.svg',
-  '/images/partners/dept-health-kzn.png',
-  '/images/partners/dept-transport-kzn.png',
-  '/images/partners/dalrrd.png',
-  '/images/partners/kzn-treasury.png',
-  '/images/partners/basa.png',
-  '/images/partners/salba.png',
-  '/images/partners/heineken.png',
-  '/images/partners/kzntafa.png',
+  { name: 'Kingdom Faith Worship Centre', logo: '/kfwc-logo.png' },
+  { name: 'SA Corp Group', logo: '/Prestige.png' },
+  { name: 'Prestige Catering', logo: '/prestige2.png' },
 ];
 
 const getTimeParts = () => {
@@ -139,10 +172,10 @@ const getTimeParts = () => {
 const pad = (value: number) => String(value).padStart(2, '0');
 
 export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps) {
-  const [activeImage, setActiveImage] = useState(0);
   const [timeLeft, setTimeLeft] = useState(getTimeParts);
   const [showProgrammePreview, setShowProgrammePreview] = useState(false);
   const [programmePreviewFailed, setProgrammePreviewFailed] = useState(false);
+  const [showHeroFallback, setShowHeroFallback] = useState(false);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -151,18 +184,11 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const carousel = window.setInterval(() => {
-      setActiveImage((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 5000);
-    return () => window.clearInterval(carousel);
-  }, []);
-
   const qrValue = useMemo(() => {
     if (typeof window !== 'undefined') {
-      return `${window.location.origin}${window.location.pathname}?register=1`;
+      return `${window.location.origin}/?register=1`;
     }
-    return 'https://www.kznera.org.za/iframe-embed_Version2.html?register=1';
+    return '/?register=1';
   }, []);
 
   const programmeFilePath = '/KZN_Liquor_Indaba_Programme.pdf';
@@ -187,7 +213,7 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
       const pngUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = pngUrl;
-      link.download = 'KZNERA-Liquor-Indaba-2026-QR.png';
+      link.download = 'KFWC-Resilient-Business-2026-QR.png';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -197,36 +223,50 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] text-[#1a1a1a] font-sans">
+    <div className="min-h-screen bg-[#1C2B3A] text-white font-sans">
       <section className="grid grid-cols-1 lg:grid-cols-[56%_44%] min-h-[90vh]">
-        <div className="bg-white px-6 sm:px-10 lg:px-14 py-10 flex flex-col justify-center">
+        <div className="bg-[#243447] px-6 sm:px-10 lg:px-14 py-10 flex flex-col justify-center">
           <img
-            src="/kznera-logo.png"
-            alt="KZNERA"
+            src="/favin.png"
+            alt="Kingdom Faith Worship Centre"
             className="mb-8 h-auto w-[170px] max-w-full object-contain object-left"
           />
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#6b7280]">
-            The Theme
+          <p className="text-xs font-normal text-white">
+            Kingdom Faith Worship Centre in collaboration with SA Corp Group
           </p>
-          <div className="mt-3 bg-[#1b3461] text-white px-5 py-4 rounded-md">
+          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035]">
+            FUNDRAISING BUSINESS SEMINAR
+          </p>
+          <div className="mt-3 bg-[#1C2B3A] text-white px-5 py-4 rounded-md border border-[#C9A035]">
             <p className="text-sm font-bold uppercase tracking-wide">
-              Repositioning the Liquor Sector for Innovative Regulation. Responsibility in Practice and Inclusive Growth.
+              TOP 10 SMME PAIN POINTS IN SA:
+              <br />
+              THE 2026 SURVIVAL AGENDA FOR SMALL BUSINESS
             </p>
           </div>
 
-          <h1 className="mt-8 font-display font-black uppercase leading-[0.9] text-4xl sm:text-6xl lg:text-7xl text-[#1b3461]">
-            Liquor
+          <h1 className="mt-8 font-display font-black uppercase leading-[0.9] text-4xl sm:text-6xl lg:text-7xl text-white">
+            Building a
             <br />
-            Regulatory
+            Resilient
             <br />
-            <span className="text-[#CC0000]">Indaba 2026</span>
+            <span className="text-[#C9A035]">Business</span>
           </h1>
 
-          <div className="w-20 h-1.5 bg-[#CC0000] mt-8" />
+          <div className="w-20 h-1.5 bg-[#C9A035] mt-8" />
 
-          <div className="mt-6 text-sm text-[#6b7280] space-y-1">
-            <p>8th &amp; 9th May 2026</p>
-            <p>Sibaya Casino, eThekwini</p>
+          <div className="mt-6 text-sm text-[#B0BEC5] space-y-1">
+            <p>9th May 2026</p>
+            <p>Olifantsfontein Community Hall, Pearce Road, Clayville</p>
+          </div>
+          <div className="mt-4 space-y-3">
+            <p className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A035]">
+              <Clock3 className="h-4 w-4" />
+              08:00 AM - 16:00 PM
+            </p>
+            <p className="inline-flex w-fit rounded-full bg-[#b91c1c] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
+              ⚠ Seats are Limited
+            </p>
           </div>
 
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -236,11 +276,11 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
               { label: 'Minutes', value: timeLeft.minutes },
               { label: 'Seconds', value: timeLeft.seconds },
             ].map((item) => (
-              <div key={item.label} className="border border-[#d1d5db] rounded-md p-3 bg-white text-center">
-                <p className="font-display font-black text-2xl text-[#1b3461]">
+              <div key={item.label} className="border border-[#C9A035] rounded-md p-3 bg-[#1C2B3A] text-center">
+                <p className="font-display font-black text-2xl text-white">
                   {pad(item.value)}
                 </p>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#CC0000]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A035]">
                   {item.label}
                 </p>
               </div>
@@ -251,48 +291,49 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
             <button
               type="button"
               onClick={onRegisterClick}
-              className="inline-flex items-center justify-center bg-[#1a1a1a] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-md hover:bg-[#1b3461] transition-colors w-fit"
+              className="inline-flex items-center justify-center bg-[#C9A035] text-[#1C2B3A] px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-md hover:bg-[#A07E25] transition-colors w-fit"
             >
               Register Now
             </button>
-            <a
-              href={programmeFileHref}
-              onClick={(e) => {
-                e.preventDefault();
-                setProgrammePreviewFailed(false);
-                setShowProgrammePreview(true);
-              }}
-              className="inline-flex items-center justify-center bg-[#1b3461] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-md hover:bg-[#102e5d] transition-colors w-fit"
-            >
-              Programme
-            </a>
           </div>
         </div>
 
-        <div className="relative min-h-[420px] lg:min-h-full overflow-hidden">
-          {HERO_IMAGES.map((image, index) => (
+        <div className="relative min-h-[420px] lg:min-h-full overflow-hidden bg-[#1C2B3A] p-6 flex items-center justify-center">
+          {showHeroFallback ? (
+            <div className="w-full max-w-lg rounded-2xl border border-[#C9A035] bg-[#243447] p-6 shadow-xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C9A035]">
+                Event Details
+              </p>
+              <div className="mt-4 space-y-3 text-white">
+                <p className="text-lg font-bold">Saturday | 9 May 2026</p>
+                <p className="text-sm text-[#B0BEC5]">08:00 - 16:00</p>
+                <p className="text-sm text-[#B0BEC5]">Olifantsfontein Community Hall</p>
+                <p className="text-sm text-[#B0BEC5]">Pearce Road, Clayville</p>
+                <p className="text-sm text-[#B0BEC5]">Tickets: R1550pp</p>
+                <p className="text-sm text-[#B0BEC5]">Includes light breakfast & lunch</p>
+              </div>
+            </div>
+          ) : (
             <img
-              key={image}
-              src={image}
-              alt="KZN Indaba visual"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                index === activeImage ? 'opacity-100' : 'opacity-0'
-              }`}
+              src="/h1.png"
+              alt="Building a Resilient Business visual"
+              className="h-full w-full rounded-xl object-contain lg:object-cover"
+              onError={() => setShowHeroFallback(true)}
             />
-          ))}
+          )}
         </div>
       </section>
 
       {showProgrammePreview ? (
         <div className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-4xl rounded-2xl border border-[#1b3461]/20 bg-white shadow-2xl overflow-hidden">
-            <div className="bg-[#1b3461] px-5 py-4 flex items-center justify-between gap-4">
+          <div className="w-full max-w-4xl rounded-2xl border border-[#C9A035]/20 bg-[#243447] shadow-2xl overflow-hidden">
+            <div className="bg-[#1C2B3A] px-5 py-4 flex items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#CC0000]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A035]">
                   Programme Preview
                 </p>
                 <h3 className="text-lg font-display font-black uppercase text-white">
-                  KZN Liquor Indaba Programme Information
+                  Building a Resilient Business Programme Information
                 </h3>
               </div>
               <button
@@ -304,15 +345,15 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
                 ×
               </button>
             </div>
-            <div className="bg-[#f7f7f5] p-4 md:p-6">
+            <div className="bg-[#243447] p-4 md:p-6">
               {programmePreviewFailed ? (
-                <div className="rounded-xl border border-[#d1d5db] bg-white overflow-hidden shadow-sm p-6 text-center">
-                  <p className="text-sm font-semibold text-[#1b3461]">
+                <div className="rounded-xl border border-[#C9A035] bg-[#1C2B3A] overflow-hidden shadow-sm p-6 text-center">
+                  <p className="text-sm font-semibold text-white">
                     Preview unavailable - please download the programme.
                   </p>
                 </div>
               ) : (
-                <div className="rounded-xl border border-[#d1d5db] bg-white overflow-hidden shadow-sm">
+                <div className="rounded-xl border border-[#C9A035] bg-white overflow-hidden shadow-sm">
                   <iframe
                     src="/KZN_Liquor_Indaba_Programme.pdf"
                     width="100%"
@@ -327,7 +368,7 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
                 <a
                   href={programmeFileHref}
                   download="KZN_Liquor_Indaba_Programme.pdf"
-                  className="inline-flex items-center justify-center bg-[#CC0000] text-white px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#990000] transition-colors"
+                  className="inline-flex items-center justify-center bg-[#C9A035] text-[#1C2B3A] px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#A07E25] transition-colors"
                 >
                   Download Programme
                 </a>
@@ -337,78 +378,97 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
         </div>
       ) : null}
 
-      <p className="max-w-7xl mx-auto px-6 mt-4 text-sm text-[#1a1a1a] leading-relaxed">
-        The following attendance packages are subject to payment. The Indaba Pass costs R500, the
-        Gala Dinner Pass costs R600, and the Indaba Combo Pass costs R900. Members of the Liquor
-        Trader Association receive a discounted rate of R300 for the Gala Dinner.
+      <p className="max-w-7xl mx-auto px-6 mt-4 text-sm text-[#B0BEC5] leading-relaxed">
+        Tickets are R1550pp — includes light breakfast and lunch | Available at
+        www.webtickets.co.za | Exhibition stalls &amp; partnerships: info@kfwc.org.za | 078-044-3373
       </p>
 
-      <section className="bg-white py-20">
+      <section className="bg-[#243447] py-20">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#CC0000]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035]">
               Background &amp; Rationale
             </p>
-            <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-[#1b3461] uppercase leading-tight">
-              Why Regulate Liquor in KZN?
+            <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase leading-tight">
+              Why Build a Resilient Business in SA?
             </h2>
-            <p className="mt-6 text-[#1a1a1a] leading-relaxed">
-              KwaZulu-Natal faces profound challenges in its liquor regulatory landscape. The
-              KZN Liquor Regulatory Indaba brings together government, industry, and community
-              stakeholders to chart a path forward.
+            <p className="mt-6 text-[#B0BEC5] leading-relaxed">
+              South Africa&apos;s small business landscape faces mounting pressure. This seminar
+              brings together government leaders, industry experts, and SMME champions to tackle
+              the top 10 pain points facing small businesses in 2026.
             </p>
-            <ul className="mt-6 space-y-3 text-[#1a1a1a]">
-              <li>Streamline liquor licensing and eliminate unlicensed trade</li>
-              <li>Enable stakeholder deal-making and regulatory engagements</li>
-              <li>Promote KZN as a model of responsible liquor governance</li>
-              <li>Strengthen community-centred compliance frameworks</li>
+            <ul className="mt-6 space-y-3 text-white">
+              <li>Streamline access to markets and funding opportunities</li>
+              <li>Address compliance, governance and regulatory challenges</li>
+              <li>Equip SMMEs with digital innovation strategies</li>
+              <li>Build resilience against economic and operational threats</li>
             </ul>
           </div>
 
-          <div className="relative rounded-2xl overflow-hidden shadow-xl">
-            <img src="/k11.png" alt="KZN Stakeholder Engagement" className="w-full h-[460px] object-cover" />
-            <div className="absolute inset-0 bg-[#1b3461]/30" />
-            <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#05111f]/80 to-transparent" />
-            <div className="absolute bottom-5 left-5 text-white">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em]">KZN Liquor Authority</p>
-              <p className="text-sm">Stakeholder Engagement</p>
-            </div>
+          <div className="rounded-2xl border border-[#C9A035] bg-[#243447] p-8 shadow-xl">
+            <p className="text-5xl leading-none text-[#C9A035]">❝</p>
+            <p className="mt-4 text-base leading-relaxed text-white">
+              South Africa&apos;s SMME sector employs over 60% of the workforce - yet faces its
+              greatest challenges in access to capital, compliance, and market entry.
+            </p>
+            <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C9A035]">
+              BUILDING A RESILIENT BUSINESS | 9 May 2026
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f7f7f5] py-20">
+      <section className="bg-[#1C2B3A] py-20">
         <div className="max-w-7xl mx-auto px-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#CC0000] text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035] text-center">
             Leadership
           </p>
-          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-[#1b3461] uppercase text-center">
+          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase text-center">
             Welcome Messages
           </h2>
           <div className="mt-12 grid md:grid-cols-3 gap-8">
             {LEADERS.map((leader) => (
-              <article key={leader.name} className="bg-white rounded-2xl shadow-md border border-zinc-200 p-7 text-center">
-                <img
-                  src={leader.image}
-                  alt={leader.name}
-                  className={`h-24 w-24 rounded-full object-cover object-top border-4 ${leader.border} mx-auto`}
+              <article key={leader.name} className="bg-[#243447] rounded-2xl shadow-md border border-[#C9A035]/30 p-7 text-center">
+                <div
+                  className={`h-24 w-24 rounded-full border-4 ${leader.border} mx-auto bg-[#1C2B3A]`}
+                  aria-hidden="true"
                 />
-                <h3 className="mt-5 font-display font-black text-xl text-[#1b3461]">{leader.name}</h3>
-                <p className="mt-2 text-sm text-[#6b7280]">{leader.role}</p>
-                <p className="mt-4 text-sm text-[#1a1a1a] italic">"{leader.quote}"</p>
+                <h3 className="mt-5 font-display font-black text-xl text-white">{leader.name}</h3>
+                <p className="mt-2 text-sm text-[#B0BEC5]">{leader.role}</p>
+                <p className="mt-4 text-sm text-white italic">"{leader.quote}"</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-[#1b3461] py-20">
+      <section className="bg-[#243447] py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#CC0000]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035] text-center">
+            SPEAKERS
+          </p>
+          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase text-center">
+            MEET THE SPEAKERS
+          </h2>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SPEAKERS.map((speaker) => (
+              <article key={speaker.name} className="bg-[#243447] rounded-2xl shadow-md border border-[#C9A035]/30 p-7 text-center">
+                <div className="h-24 w-24 rounded-full border-4 border-[#C9A035] mx-auto bg-[#1C2B3A]" aria-hidden="true" />
+                <h3 className="mt-5 font-display font-black text-xl text-white">{speaker.name}</h3>
+                <p className="mt-2 text-sm text-[#B0BEC5]">{speaker.title}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#243447] py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035]">
             Focus Areas
           </p>
           <h2 className="mt-3 font-display font-black text-4xl md:text-6xl text-white uppercase leading-none">
-            Priority Regulatory Agenda
+            Session Topics
           </h2>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {AGENDA_CARDS.map((card) => {
@@ -416,13 +476,13 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
               return (
                 <article
                   key={card.title}
-                  className={`bg-[#0e1f3d] text-white rounded-2xl border border-white/20 p-6 ${
-                    card.highlight ? 'border-l-4 border-l-[#CC0000]' : ''
+                  className={`bg-[#1C2B3A] text-white rounded-2xl border border-[#C9A035]/25 p-6 ${
+                    card.highlight ? 'border-l-4 border-l-[#C9A035]' : ''
                   }`}
                 >
-                  <Icon className="w-7 h-7 text-[#CC0000]" />
+                  <Icon className="w-7 h-7 text-[#C9A035]" />
                   <h3 className="mt-4 font-display font-bold uppercase text-lg">{card.title}</h3>
-                  <ul className="mt-4 space-y-2 text-sm text-zinc-100">
+                  <ul className="mt-4 space-y-2 text-sm text-[#B0BEC5]">
                     {card.points.map((point) => (
                       <li key={point}>- {point}</li>
                     ))}
@@ -434,22 +494,22 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
         </div>
       </section>
 
-      <section className="bg-white py-20">
+      <section className="bg-[#243447] py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#CC0000]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035]">
             Scan To Register
           </p>
-          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-[#1b3461] uppercase">
-            Join The Indaba
+          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase">
+            Join the Seminar
           </h2>
-          <p className="mt-3 text-[#6b7280]">Scan this QR code to register for the event</p>
+          <p className="mt-3 text-[#B0BEC5]">Scan the QR code or click below to secure your seat</p>
 
-          <div className="mt-8 inline-flex bg-white border border-zinc-200 shadow-xl rounded-2xl p-6">
+          <div className="mt-8 inline-flex bg-white border border-[#C9A035] shadow-xl rounded-2xl p-6">
             <QRCodeSVG
               id="kzn-qr-svg"
               value={qrValue}
               size={220}
-              fgColor="#1a1a2e"
+              fgColor="#1C2B3A"
               bgColor="#ffffff"
               level="H"
               includeMargin
@@ -460,14 +520,14 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
             <button
               type="button"
               onClick={downloadQrCode}
-              className="inline-flex items-center justify-center bg-[#1b3461] text-white px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#0e1f3d] transition-colors"
+              className="inline-flex items-center justify-center bg-[#1C2B3A] text-[#C9A035] border border-[#C9A035] px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#3D3020] transition-colors"
             >
               Download QR Code
             </button>
             <button
               type="button"
               onClick={onRegisterClick}
-              className="inline-flex items-center justify-center bg-[#CC0000] text-white px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#990000] transition-colors"
+              className="inline-flex items-center justify-center bg-[#C9A035] text-[#1C2B3A] px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#A07E25] transition-colors"
             >
               Open Registration Form
             </button>
@@ -475,113 +535,72 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
         </div>
       </section>
 
-      <div id="poster-section" className="w-full py-[60px]">
-        <h3
-          style={{
-            fontFamily: 'inherit',
-            fontSize: '28px',
-            fontWeight: 700,
-            color: '#1a2744',
-            textAlign: 'center',
-            margin: '0 0 16px 0',
-            letterSpacing: '0.5px',
-          }}
-        >
-          Welcome Poster
-        </h3>
-        <div
-          id="poster-strip"
-          className="w-full flex justify-center"
-          style={{
-            margin: 0,
-            padding: 0,
-            background: '#FFFFFF',
-            boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-          }}
-        >
-          <div className="relative w-full max-w-[800px]">
-            <img
-              src="/poster2.png"
-              alt="KZN Indaba poster"
-              className="block w-full h-auto"
-              style={{
-                margin: 0,
-                padding: 0,
-                border: 'none',
-                objectFit: 'contain',
-              }}
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-0 h-full w-6"
-              style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%)' }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <section className="bg-[#f7f7f5] py-20">
+      <section className="bg-[#243447] py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#CC0000] text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A035] text-center">
             Collaborators
           </p>
-          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-[#1b3461] uppercase text-center">
+          <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase text-center">
             Our Partners
           </h2>
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
-            {PARTNERS.map((logo) => (
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+            {PARTNERS.map((partner) => (
               <div
-                key={logo}
-                className="bg-white rounded-xl border border-zinc-200 shadow-sm hover:-translate-y-0.5 transition-transform p-5 flex items-center justify-center"
+                key={partner.name}
+                className="bg-[#1C2B3A] rounded-xl border border-[#C9A035]/40 shadow-sm hover:-translate-y-0.5 transition-transform p-5 flex flex-col items-center justify-center min-h-[120px]"
               >
-                <img src={logo} alt="Partner logo" className="max-h-12 w-full object-contain" />
+                {partner.logo ? (
+                  <div className="rounded-lg bg-white px-4 py-3 min-h-[64px] w-full max-w-[180px] flex items-center justify-center">
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-h-12 max-w-[120px] w-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <p className="font-display font-black text-lg uppercase text-[#C9A035] text-center">
+                    {partner.name}
+                  </p>
+                )}
+                {partner.logo ? (
+                  <p className="mt-3 text-xs text-[#B0BEC5] text-center">{partner.name}</p>
+                ) : null}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="bg-[#0e1f3d] text-white">
+      <footer className="bg-[#1C2B3A] text-white">
         <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
           <div>
             <h3 className="font-display font-black text-3xl uppercase">Contact Us</h3>
-            <div className="mt-6 space-y-2 text-sm text-zinc-200 leading-relaxed">
-              <p>Phone (Durban): +27 31 583 1800</p>
-              <p>Phone (PMB): +27 33 345 2714</p>
-              <p>Email: info@kznera.org.za</p>
-              <p>Website: https://www.kznera.org.za</p>
-              <p>
-                Durban Office: 18th Floor, Marine Building, 22 Dorothy Nyembe Street, Durban,
-                4001
-              </p>
-              <p>
-                PMB Office: 01 George MacFarlane Lane, Wembley, Pietermaritzburg, 3201
-              </p>
-              <p className="pt-2 text-zinc-300">
-                Note: KZNERA is the official regulatory authority for liquor, gaming and betting in
-                KwaZulu-Natal.
-              </p>
+            <div className="mt-6 space-y-2 text-sm text-[#B0BEC5] leading-relaxed">
+              <p>Phone: 078-044-3373</p>
+              <p>Email: info@kfwc.org.za</p>
+              <p>Website: www.webtickets.co.za</p>
+              <p>Venue: Olifantsfontein Community Hall, Pearce Road, Clayville</p>
             </div>
           </div>
-          <div className="bg-[#05111f] rounded-2xl p-8 border border-white/10">
+          <div className="bg-[#243447] rounded-2xl p-8 border border-[#C9A035]/20">
             <h3 className="font-display font-black text-3xl uppercase">Ready to Register?</h3>
-            <p className="mt-4 text-sm text-zinc-200 leading-relaxed">
-              Join us in Durban this May for a landmark regulatory dialogue shaping the future of
-              KZN&apos;s liquor industry.
+            <p className="mt-4 text-sm text-[#B0BEC5] leading-relaxed">
+              Join us on 9 May 2026 for a landmark SMME seminar empowering South Africa&apos;s
+              small business community.
             </p>
             <button
               type="button"
               onClick={onRegisterClick}
-              className="mt-8 inline-flex items-center justify-center bg-[#CC0000] text-white px-8 py-4 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#990000] transition-colors"
+              className="mt-8 inline-flex items-center justify-center bg-[#C9A035] text-[#1C2B3A] px-8 py-4 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#A07E25] transition-colors"
             >
               Secure Your Delegate Spot
             </button>
           </div>
         </div>
-        <div className="bg-[#05111f]">
-          <div className="max-w-7xl mx-auto px-6 py-4 text-xs text-zinc-300">
-            © 2026 KZN Liquor Authority | KwaZulu-Natal Economic Regulatory Authority. All rights
-            reserved.
+        <div className="bg-[#243447]">
+          <div className="max-w-7xl mx-auto px-6 py-4 text-xs text-[#B0BEC5]">
+            © 2026 Building a Resilient Business | Kingdom Faith Worship Centre &amp; SA Corp Group.
+            All rights reserved.
           </div>
         </div>
       </footer>
