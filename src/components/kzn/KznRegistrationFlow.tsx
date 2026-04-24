@@ -131,17 +131,14 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
   const googlePlayUrl = ((import.meta as any).env?.VITE_GOOGLE_PLAY_URL || '').trim();
   const appleAppUrl = ((import.meta as any).env?.VITE_APPLE_APP_URL || '').trim();
 
-  const totalScreens = 6;
+  const totalScreens = 3;
   const canGoBack = !loading && screen > 1 && !success;
-  const stepLabels = ['Personal Info', 'Media & Consent', 'Get App', 'Business', 'Attendance', 'POPI'];
+  const stepLabels = ['Personal Info', 'Media & Consent', 'Get App'];
 
   const getScreenTitle = () => {
     if (screen === 1) return 'Personal Info';
     if (screen === 2) return 'Media & Consent';
-    if (screen === 3) return 'Get the XS Card App';
-    if (screen === 4) return 'Business Details';
-    if (screen === 5) return 'Attendance';
-    return 'POPI & Consent';
+    return 'Get the XS Card App';
   };
 
   const toggleDietary = (item: string) => {
@@ -246,45 +243,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
     }
   };
 
-  const validateBusinessStep = () => {
-    if (!business.nationality || !business.preferredCommunication || !business.delegateCategory || !business.district) {
-      setError('Please complete all required business details.');
-      return false;
-    }
-    if (business.nationality === 'South African') {
-      if (!business.saIdNumber) {
-        setError('South African ID number is required.');
-        return false;
-      }
-    }
-    if (business.nationality === 'Other' && !business.passportNumber) {
-      setError('Passport number is required for non-South African delegates.');
-      return false;
-    }
-    return true;
-  };
-
-  const validateAttendanceStep = () => {
-    if (!attendance.dayOne && !attendance.dayTwo) {
-      setError('Please select at least one attendance day.');
-      return false;
-    }
-    if (!attendance.galaDinner || !attendance.shuttle || !attendance.accommodation) {
-      setError('Please complete all required attendance preferences.');
-      return false;
-    }
-    return true;
-  };
-
   const submitFinalRegistration = async () => {
-    if (!consent.popia || !consent.accuracy || !consent.hearAbout) {
-      setError('Please complete all required POPI and consent fields.');
-      return;
-    }
-    if (humanAnswer.trim() !== '29') {
-      setError('Human verification failed. Please answer 19 + 10 correctly.');
-      return;
-    }
     if (!kznSupabase) {
       setError('Supabase is not configured. Please set VITE_KZN_SUPABASE_URL and VITE_KZN_SUPABASE_ANON_KEY.');
       return;
@@ -293,35 +252,13 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
     setLoading(true);
     setError(null);
     try {
-      const { error: insertError } = await kznSupabase.from('kzn_indaba_registrants').insert({
+      const { error: insertError } = await kznSupabase.from('kfwc_registrants').insert({
         xs_user_id: xsUserId || null,
         first_name: personal.firstName.trim(),
         last_name: personal.lastName.trim(),
         email: personal.email.trim(),
         phone_number: personal.phoneNumber.trim() || null,
         organisation: personal.organisation.trim() || null,
-        nationality: business.nationality || null,
-        preferred_communication: business.preferredCommunication || null,
-        delegate_category: business.delegateCategory || null,
-        district: business.district || null,
-        liquor_licence_number: business.liquorLicenceNumber.trim() || null,
-        physical_address: business.physicalAddress.trim() || null,
-        job_title: business.jobTitle.trim() || null,
-        alt_contact_number: business.altContactNumber.trim() || null,
-        sa_id_number: business.nationality === 'South African' ? business.saIdNumber.trim() : null,
-        passport_number: business.nationality === 'Other' ? business.passportNumber.trim() : null,
-        day_one: attendance.dayOne,
-        day_two: attendance.dayTwo,
-        gala_dinner: attendance.galaDinner || null,
-        shuttle: attendance.shuttle || null,
-        accommodation: attendance.accommodation || null,
-        dietary_requirements: attendance.dietaryRequirements.length ? attendance.dietaryRequirements : null,
-        accessibility_needs: attendance.accessibilityNeeds.trim() || null,
-        consent_popia: consent.popia,
-        consent_comms: consent.communication,
-        consent_accuracy: consent.accuracy,
-        hear_about: consent.hearAbout,
-        topics: consent.topics.trim() || null,
         registration_complete: true,
       });
 
@@ -331,7 +268,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
       }
 
       const { data: refData } = await kznSupabase
-        .from('kzn_indaba_registrants')
+        .from('kfwc_registrants')
         .select('reference')
         .eq('email', personal.email.trim())
         .single();
@@ -357,20 +294,9 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
       return;
     }
     if (screen === 3) {
-      setScreen(4);
+      await submitFinalRegistration();
       return;
     }
-    if (screen === 4) {
-      if (!validateBusinessStep()) return;
-      setScreen(5);
-      return;
-    }
-    if (screen === 5) {
-      if (!validateAttendanceStep()) return;
-      setScreen(6);
-      return;
-    }
-    await submitFinalRegistration();
   };
 
   const resetForm = () => {
