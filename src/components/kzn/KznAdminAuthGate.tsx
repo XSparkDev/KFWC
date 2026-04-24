@@ -8,7 +8,7 @@ type KznAdminAuthGateProps = {
 };
 
 export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('KFWC@church.co.za');
   const [password, setPassword] = useState('');
   const [authEmail, setAuthEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -106,16 +106,13 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
           </button>
 
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C9A035]">Admin Access</p>
-          <h1 className="mt-2 text-2xl font-display font-black uppercase text-white">
-            Sign in
-          </h1>
+          <h1 className="mt-2 text-2xl font-display font-black uppercase text-white">Sign in</h1>
 
           {error ? (
             <div className="mt-4 rounded-md border border-[#a85555] bg-[#3f1f1f] px-3 py-2 text-sm text-[#fca5a5]">
               {error}
             </div>
           ) : null}
-
           <form onSubmit={(e) => void handleSignIn(e)} className="mt-5 space-y-4">
             <div className="space-y-2">
               <label className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
@@ -125,7 +122,7 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="KFWC@church.co.za"
                 className="w-full rounded-md border border-white/20 px-3 py-3 text-sm text-white outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20"
                 required
               />

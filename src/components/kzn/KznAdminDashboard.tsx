@@ -5,18 +5,12 @@ import { kznSupabase } from '../../lib/kznSupabase';
 type KznRegistrant = {
   id: string;
   reference: string | null;
+  xs_user_id: string | null;
   first_name: string;
   last_name: string;
   email: string;
   organisation: string | null;
   phone_number: string | null;
-  delegate_category: string | null;
-  district: string | null;
-  day_one: boolean | null;
-  day_two: boolean | null;
-  gala_dinner: string | null;
-  shuttle: string | null;
-  accommodation: string | null;
   created_at: string | null;
   registration_complete: boolean | null;
 };
@@ -42,8 +36,6 @@ const formatRegisteredDate = (value?: string | null) => {
   return `${formattedDate} · ${formattedTime}`;
 };
 
-const yesNo = (value?: boolean | null) => (value ? 'Yes' : 'No');
-
 const escapeCsv = (value: string) => `"${value.replace(/"/g, '""')}"`;
 
 export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
@@ -60,9 +52,9 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
         throw new Error('Supabase client is not configured.');
       }
       const { data, error: fetchError } = await kznSupabase
-        .from('kzn_indaba_registrants')
+        .from('kfwc_registrants')
         .select(
-          'id, reference, first_name, last_name, email, organisation, phone_number, delegate_category, district, day_one, day_two, gala_dinner, shuttle, accommodation, created_at, registration_complete',
+          'id, reference, xs_user_id, first_name, last_name, email, organisation, phone_number, created_at, registration_complete',
         )
         .order('created_at', { ascending: false });
 
@@ -105,13 +97,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
       'Email',
       'Organisation',
       'Phone Number',
-      'Delegate Category',
-      'District',
-      'Day 1',
-      'Day 2',
-      'Gala Dinner',
-      'Shuttle',
-      'Accommodation',
+      'XS User ID',
       'Registered At',
       'Complete',
     ];
@@ -122,13 +108,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
       r.email || '',
       r.organisation || '',
       r.phone_number || '',
-      r.delegate_category || '',
-      r.district || '',
-      yesNo(r.day_one),
-      yesNo(r.day_two),
-      r.gala_dinner || '',
-      r.shuttle || '',
-      r.accommodation || '',
+      r.xs_user_id || '',
       formatRegisteredDate(r.created_at),
       r.registration_complete ? 'Yes' : 'No',
     ]);
@@ -213,13 +193,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
                 <th className="px-4 py-3 min-w-[220px]">Email</th>
                 <th className="px-4 py-3 min-w-[180px]">Organisation</th>
                 <th className="px-4 py-3 min-w-[140px]">Phone Number</th>
-                <th className="px-4 py-3 min-w-[180px]">Delegate Category</th>
-                <th className="px-4 py-3 min-w-[160px]">District</th>
-                <th className="px-4 py-3 min-w-[80px]">Day 1</th>
-                <th className="px-4 py-3 min-w-[80px]">Day 2</th>
-                <th className="px-4 py-3 min-w-[130px]">Gala Dinner</th>
-                <th className="px-4 py-3 min-w-[100px]">Shuttle</th>
-                <th className="px-4 py-3 min-w-[130px]">Accommodation</th>
+                <th className="px-4 py-3 min-w-[170px]">XS User ID</th>
                 <th className="px-4 py-3 min-w-[180px]">Registered At</th>
                 <th className="px-4 py-3 min-w-[90px] text-center">Complete</th>
               </tr>
@@ -227,13 +201,13 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
+                  <td colSpan={8} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
                     Loading registrants...
                   </td>
                 </tr>
               ) : filteredRegistrants.length === 0 ? (
                 <tr>
-                  <td colSpan={14} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
+                  <td colSpan={8} className="px-4 py-8 text-center text-xs text-[#B0BEC5]">
                     No registrants found.
                   </td>
                 </tr>
@@ -252,13 +226,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
                     <td className="px-4 py-3 text-[11px] text-white break-all">{r.email || '-'}</td>
                     <td className="px-4 py-3 text-[11px] text-white break-all">{r.organisation || '-'}</td>
                     <td className="px-4 py-3 text-[11px] text-white whitespace-nowrap">{r.phone_number || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-white break-words">{r.delegate_category || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-white break-words">{r.district || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-white">{yesNo(r.day_one)}</td>
-                    <td className="px-4 py-3 text-[11px] text-white">{yesNo(r.day_two)}</td>
-                    <td className="px-4 py-3 text-[11px] text-white">{r.gala_dinner || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-white">{r.shuttle || '-'}</td>
-                    <td className="px-4 py-3 text-[11px] text-white">{r.accommodation || '-'}</td>
+                    <td className="px-4 py-3 text-[11px] text-white break-all">{r.xs_user_id || '-'}</td>
                     <td className="px-4 py-3 text-[11px] text-[#B0BEC5]">{formatRegisteredDate(r.created_at)}</td>
                     <td className="px-4 py-3 text-center">
                       {r.registration_complete ? (
