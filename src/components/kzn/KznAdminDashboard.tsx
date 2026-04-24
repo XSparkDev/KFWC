@@ -57,7 +57,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
     setError(null);
     try {
       if (!kznSupabase) {
-        throw new Error('KZN Supabase client is not configured.');
+        throw new Error('Supabase client is not configured.');
       }
       const { data, error: fetchError } = await kznSupabase
         .from('kzn_indaba_registrants')
@@ -67,13 +67,13 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
         .order('created_at', { ascending: false });
 
       if (fetchError) {
-        throw new Error(fetchError.message || 'Failed to load KZN registrants.');
+        throw new Error(fetchError.message || 'Failed to load registrants.');
       }
 
       setRegistrants((data ?? []) as KznRegistrant[]);
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Unexpected error while loading KZN registrants.';
+        err instanceof Error ? err.message : 'Unexpected error while loading registrants.';
       setError(message);
       setRegistrants([]);
     } finally {
@@ -141,7 +141,7 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'kzn-indaba-registrants.csv';
+    link.download = 'kfwc-registrants.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -165,10 +165,10 @@ export default function KznAdminDashboard({ onBack }: KznAdminDashboardProps) {
               Internal Tool
             </p>
             <h1 className="text-3xl md:text-4xl font-display font-black uppercase text-white">
-              KZN Indaba Registrants
+              Kingdom Faith Worship Centre Registrants
             </h1>
             <p className="text-xs text-[#B0BEC5] mt-2 max-w-xl">
-              View and export KZN Liquor Indaba registrations from the KZN Supabase project.
+              View and export Kingdom Faith Worship Centre registrations from Supabase.
             </p>
           </div>
           <button
