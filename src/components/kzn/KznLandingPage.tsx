@@ -15,6 +15,7 @@ type KznLandingPageProps = {
 };
 
 const TARGET_DATE = new Date('2026-05-09T08:00:00+02:00');
+const HERO_IMAGES = ['/h1.png', '/h2.png', '/h3.png', '/h4.png'];
 
 const LEADERS = [
   {
@@ -172,9 +173,8 @@ const getTimeParts = () => {
 const pad = (value: number) => String(value).padStart(2, '0');
 
 export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps) {
+  const [activeImage, setActiveImage] = useState(0);
   const [timeLeft, setTimeLeft] = useState(getTimeParts);
-  const [showProgrammePreview, setShowProgrammePreview] = useState(false);
-  const [programmePreviewFailed, setProgrammePreviewFailed] = useState(false);
   const [showHeroFallback, setShowHeroFallback] = useState(false);
 
   useEffect(() => {
@@ -184,15 +184,19 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const carousel = window.setInterval(() => {
+      setActiveImage((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 3000);
+    return () => window.clearInterval(carousel);
+  }, []);
+
   const qrValue = useMemo(() => {
     if (typeof window !== 'undefined') {
       return `${window.location.origin}/?register=1`;
     }
     return '/?register=1';
   }, []);
-
-  const programmeFilePath = '/KZN_Liquor_Indaba_Programme.pdf';
-  const programmeFileHref = encodeURI(programmeFilePath);
 
   const downloadQrCode = () => {
     const svg = document.getElementById('kzn-qr-svg');
@@ -227,7 +231,7 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
       <section className="grid grid-cols-1 lg:grid-cols-[56%_44%] min-h-[90vh]">
         <div className="bg-[#243447] px-6 sm:px-10 lg:px-14 py-10 flex flex-col justify-center">
           <img
-            src="/favin.png"
+            src="/fav.png"
             alt="Kingdom Faith Worship Centre"
             className="mb-8 h-auto w-[170px] max-w-full object-contain object-left"
           />
@@ -314,69 +318,22 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
               </div>
             </div>
           ) : (
-            <img
-              src="/h1.png"
-              alt="Building a Resilient Business visual"
-              className="h-full w-full rounded-xl object-contain lg:object-cover"
-              onError={() => setShowHeroFallback(true)}
-            />
+            <>
+              {HERO_IMAGES.map((image, index) => (
+                <img
+                  key={image}
+                  src={image}
+                  alt="Building a Resilient Business visual"
+                  className={`absolute inset-0 h-full w-full rounded-xl object-contain lg:object-cover transition-opacity duration-700 ${
+                    index === activeImage ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onError={() => setShowHeroFallback(true)}
+                />
+              ))}
+            </>
           )}
         </div>
       </section>
-
-      {showProgrammePreview ? (
-        <div className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-4xl rounded-2xl border border-[#C9A035]/20 bg-[#243447] shadow-2xl overflow-hidden">
-            <div className="bg-[#1C2B3A] px-5 py-4 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A035]">
-                  Programme Preview
-                </p>
-                <h3 className="text-lg font-display font-black uppercase text-white">
-                  Building a Resilient Business Programme Information
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowProgrammePreview(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/30 text-white hover:bg-white/10 transition-colors"
-                aria-label="Close programme preview"
-              >
-                ×
-              </button>
-            </div>
-            <div className="bg-[#243447] p-4 md:p-6">
-              {programmePreviewFailed ? (
-                <div className="rounded-xl border border-[#C9A035] bg-[#1C2B3A] overflow-hidden shadow-sm p-6 text-center">
-                  <p className="text-sm font-semibold text-white">
-                    Preview unavailable - please download the programme.
-                  </p>
-                </div>
-              ) : (
-                <div className="rounded-xl border border-[#C9A035] bg-white overflow-hidden shadow-sm">
-                  <iframe
-                    src="/KZN_Liquor_Indaba_Programme.pdf"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 'none', minHeight: '500px' }}
-                    title="KZN Liquor Indaba Programme"
-                    onError={() => setProgrammePreviewFailed(true)}
-                  />
-                </div>
-              )}
-              <div className="mt-4 flex flex-wrap items-center justify-end gap-3">
-                <a
-                  href={programmeFileHref}
-                  download="KZN_Liquor_Indaba_Programme.pdf"
-                  className="inline-flex items-center justify-center bg-[#C9A035] text-[#1C2B3A] px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-[#A07E25] transition-colors"
-                >
-                  Download Programme
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
 
       <p className="max-w-7xl mx-auto px-6 mt-4 text-sm text-[#B0BEC5] leading-relaxed">
         Tickets are R1550pp — includes light breakfast and lunch | Available at

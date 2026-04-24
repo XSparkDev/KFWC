@@ -22,7 +22,7 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
     const initSession = async () => {
       if (!kznSupabase) {
         if (mounted) {
-          setError('KZN Supabase client is not configured.');
+          setError('Supabase client is not configured.');
           setInitializing(false);
         }
         return;
@@ -57,7 +57,7 @@ export default function KznAdminAuthGate({ onBack }: KznAdminAuthGateProps) {
   const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
     if (!kznSupabase) {
-      setError('KZN Supabase client is not configured.');
+      setError('Supabase client is not configured.');
       return;
     }
     setLoading(true);

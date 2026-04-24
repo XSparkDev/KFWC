@@ -42,16 +42,16 @@ const DIETARY_OPTIONS = [
 ];
 
 const HEAR_ABOUT_OPTIONS = [
-  'Direct invitation from KZNERA',
+  'Direct invitation from Kingdom Faith Worship Centre',
   'SMS notification',
   'Email notification',
-  'KZNERA website',
+  'KFWC website',
   'Social media',
   'Ward councillor/Community leader',
   'Colleague/Peer',
   'Trade association',
   'Newspaper/Media',
-  'Pre-Indaba District Roundtable',
+  'Church or community announcement',
   'Other',
 ];
 
@@ -286,7 +286,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
       return;
     }
     if (!kznSupabase) {
-      setError('KZN Supabase is not configured. Please set VITE_KZN_SUPABASE_URL and VITE_KZN_SUPABASE_ANON_KEY.');
+      setError('Supabase is not configured. Please set VITE_KZN_SUPABASE_URL and VITE_KZN_SUPABASE_ANON_KEY.');
       return;
     }
 
@@ -434,7 +434,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
             <span className="text-5xl font-black leading-none">✓</span>
           </div>
           <h2 className="text-4xl font-display font-black uppercase mb-4 text-[#C9A035]">Registration Complete</h2>
-          <p className="text-[#B0BEC5] text-lg">Your KZN Liquor Indaba registration has been submitted successfully.</p>
+          <p className="text-[#B0BEC5] text-lg">Your Kingdom Faith Worship Centre registration has been submitted successfully.</p>
           <div className="mt-6 inline-flex flex-col items-center gap-2 rounded-xl border border-[#C9A035] bg-[#C9A035]/15 px-6 py-4">
             <p className="text-xs uppercase tracking-[0.18em] font-semibold text-[#ffd6d6]">
               Your reference number:
@@ -670,7 +670,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
                     <option>Tavern/Shebeen</option><option>Restaurant/On-Consumption</option><option>Bottle Store/Off-Consumption</option><option>Microbrewer/Craft Producer</option><option>Distributor/Wholesaler</option><option>Large Manufacturer</option>
                   </optgroup>
                   <optgroup label="Government & Regulatory">
-                    <option>KZNERA Staff</option><option>EDTEA Official</option><option>National Liquor Authority</option><option>Local Government/Municipality</option><option>SAPS/Law Enforcement</option><option>SARS Representative</option>
+                    <option>KFWC Staff</option><option>SA Corp Group Representative</option><option>Government Official</option><option>Local Government/Municipality</option><option>SAPS/Law Enforcement</option><option>SARS Representative</option>
                   </optgroup>
                   <optgroup label="Other Stakeholders">
                     <option>Financial Institution/DFI</option><option>FMCG/Industry Partner</option><option>Trade Association</option><option>Media Representative</option><option>SADC Representative</option><option>NGO/Community Organisation</option><option>Academic/Researcher</option><option>Other</option>
@@ -679,7 +679,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Liquor Licence Number</label><input placeholder="e.g. KZN-2024-XXXXX" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 font-medium text-white" value={business.liquorLicenceNumber} onChange={(e) => setBusiness({ ...business, liquorLicenceNumber: e.target.value })} /></div>
+                <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Registration / Permit Number</label><input placeholder="e.g. REG-2026-XXXXX" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 font-medium text-white" value={business.liquorLicenceNumber} onChange={(e) => setBusiness({ ...business, liquorLicenceNumber: e.target.value })} /></div>
                 <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Physical Address / Town</label><input placeholder="e.g. 12 Main Street, Pinetown" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 font-medium text-white" value={business.physicalAddress} onChange={(e) => setBusiness({ ...business, physicalAddress: e.target.value })} /></div>
                 <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Job Title / Role</label><input placeholder="e.g. Operations Manager" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 font-medium text-white" value={business.jobTitle} onChange={(e) => setBusiness({ ...business, jobTitle: e.target.value })} /></div>
                 <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Alternative Contact Number</label><input placeholder="e.g. +27 31 000 0000" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 font-medium text-white" value={business.altContactNumber} onChange={(e) => setBusiness({ ...business, altContactNumber: e.target.value })} /></div>
