@@ -167,7 +167,7 @@ const PARTNERS = [
   { name: 'SA Corp Group', logo: '/Prestige.png' },
   { name: 'Prestige Catering', logo: '/prestige2.png' },
   { name: 'XS Card', logo: '/xscard-logo.png', url: 'https://xscard.co.za/' },
-  { name: 'X Spark', logo: '/xspark.png' },
+  { name: 'X Spark', logo: '/xspark.png', url: 'https://www.xspark.co.za/' },
 ];
 
 const getTimeParts = () => {
