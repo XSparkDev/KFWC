@@ -14,6 +14,7 @@ type Nationality = 'South African' | 'Other' | '';
 type PreferredCommunication = 'Email' | 'SMS' | 'WhatsApp' | 'Phone Call' | '';
 type YesNo = 'Yes' | 'No' | '';
 type GalaOption = 'Yes, I will attend' | 'No, day programme only' | '';
+type XsMembership = 'yes' | 'no';
 
 const DISTRICT_OPTIONS = [
   'eThekwini Metropolitan',
@@ -56,6 +57,7 @@ const HEAR_ABOUT_OPTIONS = [
 ];
 
 const MIN_PASSWORD_LENGTH = 6;
+const ALREADY_REGISTERED_MESSAGE = 'This email is already registered for this event.';
 
 type KznRegistrationFlowProps = {
   onClose?: () => void;
@@ -84,6 +86,8 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
   const [showCredentials, setShowCredentials] = useState(false);
   const [humanAnswer, setHumanAnswer] = useState('');
   const [reference, setReference] = useState('');
+  const [xsMembership, setXsMembership] = useState<XsMembership>('no');
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
   const [personal, setPersonal] = useState({
     firstName: '',
@@ -133,11 +137,11 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
 
   const totalScreens = 3;
   const canGoBack = !loading && screen > 1 && !success;
-  const stepLabels = ['Personal Info', 'Media & Consent', 'Get App'];
+  const stepLabels = ['Personal Info', 'Preview & Confirm', 'Get App'];
 
   const getScreenTitle = () => {
     if (screen === 1) return 'Personal Info';
-    if (screen === 2) return 'Media & Consent';
+    if (screen === 2) return 'Preview & Confirm';
     return 'Get the XS Card App';
   };
 
@@ -156,6 +160,42 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
 
       return { ...prev, dietaryRequirements: next };
     });
+  };
+
+  const isAlreadyOnXsError = (payload: any) => {
+    const directCode = String(payload?.code ?? '').toUpperCase();
+    const nestedCode = String(payload?.error?.code ?? '').toUpperCase();
+    const directMessage = String(payload?.message ?? '').toLowerCase();
+    const nestedMessage = String(payload?.error?.message ?? payload?.error ?? '').toLowerCase();
+    const combined = `${directMessage} ${nestedMessage}`;
+    return (
+      directCode === 'EMAIL_ALREADY_EXISTS' ||
+      nestedCode === 'EMAIL_ALREADY_EXISTS' ||
+      combined.includes('already exists') ||
+      combined.includes('already registered') ||
+      combined.includes('email exists') ||
+      combined.includes('email is already')
+    );
+  };
+
+  const checkAlreadyRegistered = async () => {
+    if (!kznSupabase) return false;
+    const normalizedEmail = personal.email.trim();
+    const { data, error: existsError } = await kznSupabase
+      .from('kfwc_registrants')
+      .select('id')
+      .ilike('email', normalizedEmail)
+      .limit(1);
+
+    if (existsError) {
+      setError(existsError.message || 'Unable to validate registration status.');
+      return true;
+    }
+    if (data && data.length > 0) {
+      setError(ALREADY_REGISTERED_MESSAGE);
+      return true;
+    }
+    return false;
   };
 
   const registerWithXs = async () => {
@@ -196,6 +236,13 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
       const addUserData = addUserText ? JSON.parse(addUserText) : {};
 
       if (!addUserResponse.ok) {
+        if (isAlreadyOnXsError(addUserData)) {
+          setInfoMessage('This email already exists on XS Card. Continuing with event registration.');
+          setXsUserId('');
+          setShowCredentials(false);
+          setScreen(2);
+          return;
+        }
         setError(addUserData?.message || 'Failed to create XS user profile.');
         return;
       }
@@ -252,6 +299,9 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
     setLoading(true);
     setError(null);
     try {
+      const alreadyRegistered = await checkAlreadyRegistered();
+      if (alreadyRegistered) return;
+
       const { error: insertError } = await kznSupabase.from('kfwc_registrants').insert({
         xs_user_id: xsUserId || null,
         first_name: personal.firstName.trim(),
@@ -263,6 +313,15 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
       });
 
       if (insertError) {
+        const normalized = `${insertError.message || ''}`.toLowerCase();
+        if (
+          normalized.includes('duplicate') ||
+          normalized.includes('unique') ||
+          normalized.includes('already registered')
+        ) {
+          setError(ALREADY_REGISTERED_MESSAGE);
+          return;
+        }
         setError(insertError.message || 'Failed to save registration details.');
         return;
       }
@@ -285,7 +344,25 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
 
   const handleContinue = async () => {
     setError(null);
+    setInfoMessage(null);
     if (screen === 1) {
+      if (!personal.firstName || !personal.lastName || !personal.email || !personal.phoneNumber || !personal.organisation) {
+        setError('Please complete all required personal information fields.');
+        return;
+      }
+      const alreadyRegistered = await checkAlreadyRegistered();
+      if (alreadyRegistered) return;
+
+      if (xsMembership === 'yes') {
+        setXsUserId('');
+        setShowCredentials(false);
+        setScreen(2);
+        return;
+      }
+      if (personal.password.trim().length < MIN_PASSWORD_LENGTH) {
+        setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+        return;
+      }
       await registerWithXs();
       return;
     }
@@ -306,6 +383,8 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
     setError(null);
     setReference('');
     setXsUserId('');
+    setXsMembership('no');
+    setInfoMessage(null);
     setShowPassword(false);
     setShowCredentials(false);
     setHumanAnswer('');
@@ -354,37 +433,41 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-6 font-sans">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-[#243447] p-12 md:p-16 rounded-2xl shadow-lg text-center text-white border border-white/10">
-          <div className="w-24 h-24 bg-[#C9A035] rounded-full flex items-center justify-center mx-auto mb-8 text-white">
-            <span className="text-5xl font-black leading-none">✓</span>
+      <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-4 font-sans">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-[#243447] p-5 sm:p-8 md:p-12 rounded-2xl shadow-lg text-center text-white border border-white/10">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#C9A035] rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 text-white">
+            <span className="text-4xl sm:text-5xl font-black leading-none">✓</span>
           </div>
-          <h2 className="text-4xl font-display font-black uppercase mb-4 text-[#C9A035]">Registration Complete</h2>
-          <p className="text-[#B0BEC5] text-lg">Your Kingdom Faith Worship Centre registration has been submitted successfully.</p>
-          <div className="mt-6 inline-flex flex-col items-center gap-2 rounded-xl border border-[#C9A035] bg-[#C9A035]/15 px-6 py-4">
-            <p className="text-xs uppercase tracking-[0.18em] font-semibold text-[#ffd6d6]">
-              Your reference number:
-            </p>
-            <p className="text-2xl font-display font-black tracking-wide text-white">
-              {reference || '—'}
-            </p>
-          </div>
-          {onClose ? (
-            <button
-              type="button"
-              onClick={handleClose}
-              className="mt-8 inline-flex items-center justify-center bg-[#C9A035] text-white px-6 py-3 rounded-md font-display font-black uppercase tracking-widest hover:bg-[#A07E25] transition-all"
+          <h2 className="text-[clamp(1.8rem,6vw,2.25rem)] font-display font-black uppercase mb-4 text-[#C9A035] leading-tight">Registration Complete</h2>
+          <p className="text-[#B0BEC5] text-[15px] sm:text-lg leading-relaxed max-w-[42ch] mx-auto">
+            Your Kingdom Faith Worship Centre registration has been submitted successfully.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <a
+              href="https://www.webtickets.co.za/v2/event.aspx?itemid=1592962082"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full max-w-[360px] inline-flex items-center justify-center bg-[#C9A035] text-white px-6 py-3 rounded-md font-display font-black uppercase tracking-widest hover:bg-[#A07E25] transition-all"
             >
-              Return to Landing
-            </button>
-          ) : null}
+              Pay for the event
+            </a>
+            {onClose ? (
+              <button
+                type="button"
+                onClick={handleClose}
+                className="w-full max-w-[360px] inline-flex items-center justify-center bg-[#C9A035] text-white px-6 py-3 rounded-md font-display font-black uppercase tracking-widest hover:bg-[#A07E25] transition-all"
+              >
+                Return to Landing
+              </button>
+            ) : null}
+          </div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-[#1C2B3A] flex items-center justify-center p-3 sm:p-6 font-sans">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-[720px]">
         <div className="mb-4 rounded-xl bg-[#1C2B3A] px-4 py-3 text-white">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
@@ -393,7 +476,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
             <p className="inline-flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#C9A035]" /> Tickets: R1550pp</p>
           </div>
         </div>
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full bg-[#243447] p-6 md:p-8 rounded-2xl shadow-lg border border-white/20">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full bg-[#243447] p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg border border-white/20 overflow-x-hidden">
         {onClose ? (
           <button
             type="button"
@@ -413,8 +496,9 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
             <h2 className="text-3xl font-display font-black uppercase text-white mt-2">{getScreenTitle().toUpperCase()}</h2>
             <p className="text-white/70 mt-1 text-sm font-medium">Complete all sections to confirm your delegate profile.</p>
           </div>
-          <div className="bg-[#243447] px-4 sm:px-6 py-5">
-            <div className="flex items-start justify-between">
+          <div className="bg-[#243447] px-3 sm:px-6 py-5">
+            <div className="overflow-x-auto">
+              <div className="flex items-start justify-between min-w-[640px] pr-2">
               {Array.from({ length: totalScreens }, (_, i) => i + 1).map((i) => {
                 const isCompleted = i < screen;
                 const isActive = i === screen;
@@ -449,10 +533,12 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
                   </div>
                 );
               })}
+              </div>
             </div>
           </div>
         </div>
 
+        {infoMessage ? <div className="mb-6 p-3 bg-[#1f3a34] border border-[#4f9b87] text-[#c4f4e8] rounded-xl text-sm font-medium">{infoMessage}</div> : null}
         {error && <div className="mb-6 p-3 bg-[#3f1f1f] border border-[#a85555] text-[#fca5a5] rounded-xl text-sm font-medium">{error}</div>}
 
         <AnimatePresence mode="wait">
@@ -485,15 +571,33 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
                 <input placeholder="e.g. Nkosi Taverns (Pty) Ltd" className="w-full px-4 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 text-white font-medium" value={personal.organisation} onChange={(e) => setPersonal({ ...personal, organisation: e.target.value })} />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Password <span className="text-[#fca5a5]">*</span></label>
-                <div className="relative">
-                  <input type={showPassword ? 'text' : 'password'} placeholder="Create a secure password" className="w-full px-4 pr-12 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 text-white font-medium" value={personal.password} onChange={(e) => setPersonal({ ...personal, password: e.target.value })} />
-                  <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full text-[#B0BEC5] hover:text-white transition-colors">
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+              <div className="space-y-3 rounded-xl border border-white/15 bg-[#1C2B3A] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
+                  Do you already use XS Card? <span className="text-[#fca5a5]">*</span>
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <label className="inline-flex items-center gap-2 text-sm font-medium text-white">
+                    <input type="radio" checked={xsMembership === 'yes'} onChange={() => setXsMembership('yes')} />
+                    Yes - I already use XS Card
+                  </label>
+                  <label className="inline-flex items-center gap-2 text-sm font-medium text-white">
+                    <input type="radio" checked={xsMembership === 'no'} onChange={() => setXsMembership('no')} />
+                    No - create my XS Card account as part of registration
+                  </label>
                 </div>
               </div>
+
+              {xsMembership === 'no' ? (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">Password <span className="text-[#fca5a5]">*</span></label>
+                  <div className="relative">
+                    <input type={showPassword ? 'text' : 'password'} placeholder="Create a secure password" className="w-full px-4 pr-12 py-4 bg-[#243447] border border-white/20 rounded-lg outline-none focus:border-[#C9A035] focus:ring-2 focus:ring-[#C9A035]/20 text-white font-medium" value={personal.password} onChange={(e) => setPersonal({ ...personal, password: e.target.value })} />
+                    <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full text-[#B0BEC5] hover:text-white transition-colors">
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </motion.div>
           ) : null}
 
@@ -516,35 +620,47 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A035]">Optional but strongly recommended</p>
                 <p className="text-sm text-white">Install the XS Card app to manage your delegate profile, networking, meetings and event updates in real time.</p>
               </div>
-              <div className="relative space-y-6 rounded-2xl border border-[#C9A035] bg-[#243447] px-6 py-8">
-                <p className="text-sm text-white">Install the XS Card app to keep your delegate details handy, access your tickets and stay in sync with the programme.</p>
-                <div className="flex flex-wrap gap-3">
-                  {googlePlayUrl ? (
-                    <a href={googlePlayUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-md bg-[#C9A035] px-6 py-3 text-xs font-black uppercase tracking-[0.25em] text-white hover:bg-[#A07E25] transition-colors">
-                      Google Play
-                    </a>
-                  ) : null}
-                  {appleAppUrl ? (
-                    <a href={appleAppUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-md bg-[#1C2B3A] px-6 py-3 text-xs font-black uppercase tracking-[0.25em] text-white border border-white/20 transition-colors">
-                      App Store
-                    </a>
-                  ) : null}
-                </div>
-                <img
-                  src="/xscard-logo.png"
-                  alt="XS Card"
-                  className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 w-[140px] h-auto object-contain pointer-events-none"
-                />
-                <div className="space-y-3">
-                  <button type="button" onClick={() => setShowCredentials((prev) => !prev)} className="inline-flex items-center justify-center rounded-md border border-white/40 bg-[#243447] px-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors">
-                    Show credentials
-                  </button>
-                  {showCredentials ? (
-                    <div className="rounded-xl border border-white/20 bg-[#1C2B3A] px-4 py-4 text-sm text-white space-y-2">
-                      <p><span className="font-black">Email:</span> {personal.email || 'Not provided yet'}</p>
-                      <p><span className="font-black">Password:</span> {personal.password || 'Not provided yet'}</p>
+              <div className="rounded-2xl border border-[#C9A035] bg-[#243447] px-6 py-8">
+                <div className="flex flex-col md:flex-row md:items-center gap-6">
+                  <div className="flex-1 min-w-0 space-y-6">
+                    <p className="text-sm text-white">Install the XS Card app to keep your delegate details handy, access your tickets and stay in sync with the programme.</p>
+                    <p className="text-sm text-white">Stay connected with XS Card.</p>
+                    <div className="flex flex-wrap gap-3">
+                      {googlePlayUrl ? (
+                        <a href={googlePlayUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-md bg-[#1C2B3A] px-6 py-3 text-xs font-black uppercase tracking-[0.25em] text-white border border-white/20 transition-colors">
+                          Google Play
+                        </a>
+                      ) : null}
+                      {appleAppUrl ? (
+                        <a href={appleAppUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-md bg-[#1C2B3A] px-6 py-3 text-xs font-black uppercase tracking-[0.25em] text-white border border-white/20 transition-colors">
+                          App Store
+                        </a>
+                      ) : null}
                     </div>
-                  ) : null}
+                    <div className="space-y-3">
+                      <button type="button" onClick={() => setShowCredentials((prev) => !prev)} className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-[#1C2B3A] border border-white/20 hover:bg-[#f5f5f5] transition-colors">
+                        Show credentials
+                      </button>
+                      {showCredentials ? (
+                        <div className="rounded-xl border border-white/20 bg-[#1C2B3A] px-4 py-4 text-sm text-white space-y-2">
+                          <p><span className="font-black">Email:</span> {personal.email || 'Not provided yet'}</p>
+                          <p><span className="font-black">Password:</span> {personal.password || 'Not provided yet'}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <a
+                    href="https://xscard.co.za/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-full max-w-[200px] md:w-[190px] shrink-0 self-center items-center justify-center rounded-xl border-2 border-[#C9A035] bg-white px-6 py-5"
+                  >
+                    <img
+                      src="/xscard-logo.png"
+                      alt="XS Card"
+                      className="block w-full h-auto object-contain"
+                    />
+                  </a>
                 </div>
               </div>
               <p className="text-[11px] text-[#B0BEC5] leading-relaxed">Note: You can proceed without installing the app, but we recommend completing this step to unlock the full digital conference experience.</p>
@@ -688,7 +804,7 @@ export default function KznRegistrationFlow({ onClose }: KznRegistrationFlowProp
           <button type="button" disabled={!canGoBack} onClick={() => setScreen((prev) => Math.max(1, prev - 1))} className="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-4 rounded-md border border-[#C9A035] text-xs font-semibold uppercase tracking-[0.18em] text-center text-white hover:bg-[#243447] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
             <span className="text-base leading-none mr-1">←</span> Back
           </button>
-          <button type="button" disabled={loading} onClick={() => void handleContinue()} className={`w-full sm:w-auto sm:ml-auto px-5 sm:px-8 py-4 ${screen === 6 ? 'bg-[#C9A035] hover:bg-[#A07E25]' : 'bg-[#243447] hover:bg-[#1C2B3A]'} text-white rounded-md font-display font-black uppercase tracking-[0.15em] flex items-center justify-center gap-2 transition-all group disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap`}>
+          <button type="button" disabled={loading} onClick={() => void handleContinue()} className={`w-full sm:w-auto sm:ml-auto px-5 sm:px-8 py-4 ${screen === 6 ? 'bg-[#C9A035] hover:bg-[#A07E25]' : 'bg-[#243447] hover:bg-[#1C2B3A]'} ${screen === 3 ? 'border border-[#C9A035]' : 'border border-transparent'} text-white rounded-md font-display font-black uppercase tracking-[0.15em] flex items-center justify-center gap-2 transition-all group disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap`}>
             {loading ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>
               {screen < 6 ? (screen === 3 ? 'Complete Registration' : 'Continue') : 'Confirm Registration'}
               <span className="text-base leading-none">→</span>

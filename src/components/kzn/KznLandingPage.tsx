@@ -19,7 +19,7 @@ const HERO_IMAGES = ['/h1.png', '/h2.png', '/h3.png', '/h4.png'];
 
 const LEADERS = [
   {
-    image: '',
+    image: '/Dr Makhubu.png',
     name: 'Dr. NJ Makhubu',
     role: 'Corporate Business Executive, Incoming SARS Commissioner',
     quote:
@@ -27,7 +27,7 @@ const LEADERS = [
     border: 'border-[#C9A035]',
   },
   {
-    image: '',
+    image: '/Eustace.png',
     name: 'Eustace Mashimbye',
     role: 'CEO: Proudly South African, Market Access Specialist',
     quote:
@@ -35,7 +35,7 @@ const LEADERS = [
     border: 'border-[#C9A035]',
   },
   {
-    image: '',
+    image: '/Dr. Mary.png',
     name: 'Dr. Mashudu Bidzha',
     role: 'Acting Chief Director: Public Finance, National Treasury',
     quote:
@@ -117,39 +117,48 @@ const SPEAKERS = [
   {
     name: 'Dr. NJ Makhubu',
     title: 'Corporate Business Executive | Incoming SARS Commissioner',
+    image: '/Dr Makhubu.png',
   },
   {
     name: 'Dr. Maanda Tshifularo',
     title:
       'Lecturer, GIBS | Business Turnaround Strategist | Published Author & Leadership Coach',
+    image: '/Dr Maanda.png',
   },
   {
     name: 'Dr. Mashudu Bidzha',
     title: 'Acting Chief Director: Public Finance | National Treasury',
+    image: '/Dr. Mary.png',
   },
   {
     name: 'Eustace Mashimbye',
     title: 'CEO: Proudly South African | Market Access Specialist',
+    image: '/Eustace.png',
   },
   {
     name: 'Julia Ramitshana',
     title: 'Chairperson & CEO | International Partnerships & Industry Collaboration',
+    image: '/Julia.png',
   },
   {
     name: 'Rhulani Nyiko Maluleke',
     title: 'Senior Manager, Nedbank Digital Innovation | Township Economy Ambassador',
+    image: '/Rhulani.png',
   },
   {
     name: 'Xolani Ngazimbi',
     title: 'Executive Director | Transformation & Diversity Strategist',
+    image: '/Nomvuyo.png',
   },
   {
     name: 'Luncedo Mtwentwe',
     title: 'Managing Director, SMME Funding Advisor | Sunday Times Business Columnist',
+    image: '/Luncedo.png',
   },
   {
     name: 'Stanley Bezuidenhout',
     title: 'Brand Development | Compliance & Growth Specialist',
+    image: '/Stanley.png',
   },
 ];
 
@@ -157,6 +166,8 @@ const PARTNERS = [
   { name: 'Kingdom Faith Worship Centre', logo: '/kfwc-logo.png' },
   { name: 'SA Corp Group', logo: '/Prestige.png' },
   { name: 'Prestige Catering', logo: '/prestige2.png' },
+  { name: 'XS Card', logo: '/xscard-logo.png', url: 'https://xscard.co.za/' },
+  { name: 'X Spark', logo: '/xspark.png' },
 ];
 
 const getTimeParts = () => {
@@ -227,9 +238,9 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
   };
 
   return (
-    <div className="min-h-screen bg-[#1C2B3A] text-white font-sans">
+    <div className="min-h-screen bg-[#1C2B3A] text-white font-sans overflow-x-hidden">
       <section className="grid grid-cols-1 lg:grid-cols-[56%_44%] min-h-[90vh]">
-        <div className="bg-[#243447] px-6 sm:px-10 lg:px-14 py-10 flex flex-col justify-center">
+        <div className="bg-[#243447] px-4 sm:px-10 lg:px-14 py-10 flex flex-col justify-center">
           <img
             src="/fav.png"
             alt="Kingdom Faith Worship Centre"
@@ -249,7 +260,7 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
             </p>
           </div>
 
-          <h1 className="mt-8 font-display font-black uppercase leading-[0.9] text-4xl sm:text-6xl lg:text-7xl text-white">
+          <h1 className="mt-8 font-display font-black uppercase leading-[0.9] text-3xl sm:text-6xl lg:text-7xl text-white">
             Building a
             <br />
             Resilient
@@ -335,7 +346,7 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
         </div>
       </section>
 
-      <p className="max-w-7xl mx-auto px-6 mt-4 text-sm text-[#B0BEC5] leading-relaxed">
+      <p className="max-w-7xl mx-auto px-4 sm:px-6 mt-4 text-sm text-[#B0BEC5] leading-relaxed break-words">
         Tickets are R1550pp — includes light breakfast and lunch | Available at
         www.webtickets.co.za | Exhibition stalls &amp; partnerships: info@kfwc.org.za | 078-044-3373
       </p>
@@ -386,10 +397,13 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
           <div className="mt-12 grid md:grid-cols-3 gap-8">
             {LEADERS.map((leader) => (
               <article key={leader.name} className="bg-[#243447] rounded-2xl shadow-md border border-[#C9A035]/30 p-7 text-center">
-                <div
-                  className={`h-24 w-24 rounded-full border-4 ${leader.border} mx-auto bg-[#1C2B3A]`}
-                  aria-hidden="true"
-                />
+                <div className={`h-24 w-24 rounded-full border-4 ${leader.border} mx-auto bg-[#1C2B3A] overflow-hidden`}>
+                  <img
+                    src={leader.image}
+                    alt={leader.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
                 <h3 className="mt-5 font-display font-black text-xl text-white">{leader.name}</h3>
                 <p className="mt-2 text-sm text-[#B0BEC5]">{leader.role}</p>
                 <p className="mt-4 text-sm text-white italic">"{leader.quote}"</p>
@@ -410,7 +424,13 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {SPEAKERS.map((speaker) => (
               <article key={speaker.name} className="bg-[#243447] rounded-2xl shadow-md border border-[#C9A035]/30 p-7 text-center">
-                <div className="h-24 w-24 rounded-full border-4 border-[#C9A035] mx-auto bg-[#1C2B3A]" aria-hidden="true" />
+                <div className="h-24 w-24 rounded-full border-4 border-[#C9A035] mx-auto bg-[#1C2B3A] overflow-hidden">
+                  <img
+                    src={speaker.image}
+                    alt={speaker.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
                 <h3 className="mt-5 font-display font-black text-xl text-white">{speaker.name}</h3>
                 <p className="mt-2 text-sm text-[#B0BEC5]">{speaker.title}</p>
               </article>
@@ -500,28 +520,38 @@ export default function KznLandingPage({ onRegisterClick }: KznLandingPageProps)
           <h2 className="mt-3 font-display font-black text-4xl md:text-5xl text-white uppercase text-center">
             Our Partners
           </h2>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-7">
             {PARTNERS.map((partner) => (
-              <div
-                key={partner.name}
-                className="bg-[#1C2B3A] rounded-xl border border-[#C9A035]/40 shadow-sm hover:-translate-y-0.5 transition-transform p-5 flex flex-col items-center justify-center min-h-[120px]"
-              >
+              <div key={partner.name} className="flex flex-col items-center justify-start">
                 {partner.logo ? (
-                  <div className="rounded-lg bg-white px-4 py-3 min-h-[64px] w-full max-w-[180px] flex items-center justify-center">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-h-12 max-w-[120px] w-full object-contain"
-                    />
-                  </div>
+                  partner.url ? (
+                    <a
+                      href={partner.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg bg-white px-6 py-5 min-h-[128px] w-full max-w-[360px] flex items-center justify-center border border-[#C9A035]/40"
+                    >
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className={`max-h-24 max-w-[240px] w-full object-contain ${partner.name === 'XS Card' ? 'scale-125' : ''}`}
+                      />
+                    </a>
+                  ) : (
+                    <div className="rounded-lg bg-white px-6 py-5 min-h-[128px] w-full max-w-[360px] flex items-center justify-center border border-[#C9A035]/40">
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className={`max-h-24 max-w-[240px] w-full object-contain ${partner.name === 'XS Card' ? 'scale-125' : ''}`}
+                      />
+                    </div>
+                  )
                 ) : (
-                  <p className="font-display font-black text-lg uppercase text-[#C9A035] text-center">
+                  <p className="font-display font-black text-lg uppercase text-[#C9A035] text-center min-h-[128px] inline-flex items-center justify-center">
                     {partner.name}
                   </p>
                 )}
-                {partner.logo ? (
-                  <p className="mt-3 text-xs text-[#B0BEC5] text-center">{partner.name}</p>
-                ) : null}
+                <p className="mt-3 text-sm text-[#B0BEC5] text-center">{partner.name}</p>
               </div>
             ))}
           </div>

@@ -987,7 +987,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               : step === 2
               ? 'Professional Profile'
               : step === 3
-              ? 'Media & Consent'
+              ? 'Preview & Confirm'
               : 'Get the XS Card App'}
           </h2>
           <p className="text-zinc-500 mt-2 font-medium">
